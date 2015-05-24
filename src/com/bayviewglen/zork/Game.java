@@ -27,6 +27,7 @@ class Game {
 	private Parser parser;
 	private Room currentRoom;
 	private Date endTime;
+	private Date pauseTime;
 
 	// This is a MASTER object that contains all of the rooms and is easily
 	// accessible.
@@ -161,8 +162,12 @@ class Game {
 			printHelp();
 		else if (commandWord.equals("go"))
 			goRoom(command);
-		// else if (commandWord.equals("pause"))
-		// else if (commandWord.equals("resume"))
+		else if (commandWord.equals("pause"))
+			pauseTime = new Date();
+		else if (commandWord.equals("resume")){
+			Date rightNow = new Date();
+			endTime = new Date(rightNow.getTime() - pauseTime.getTime() + endTime.getTime());
+		}
 		// else if (commandWord.equals("grab"))
 		// else if (commandWord.equals("talk"))
 		// else if (commandWord.equals("give"))
