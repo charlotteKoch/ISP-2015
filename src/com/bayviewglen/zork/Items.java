@@ -4,11 +4,13 @@ public class Items {
 	Room location;
 	int weight;
 
+	public Items(Room startRoom, int itemWeight) {
+		location = startRoom;
+		weight = itemWeight;
+	}
+
 	public void setLocation(Room currentRoom) {
 		location = currentRoom;
 	}
 
-	public void setWeight(int itemWeight) {
-		weight = itemWeight;
-	}
 }

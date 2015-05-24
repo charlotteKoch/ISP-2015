@@ -2,6 +2,7 @@ package com.bayviewglen.zork;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -36,6 +37,9 @@ class Game {
 	// In a hashmap keys are case sensitive.
 	// masterRoomMap.get("GREAT_ROOM") will return the Room Object that is the
 	// Great Room (assuming you have one).
+	private ArrayList<Character> listOfCharacters = new ArrayList<Character>();
+	private Inventory items = new Inventory();
+
 	private HashMap<String, Room> masterRoomMap;
 
 	private void initRooms(String fileName) throws Exception {
@@ -164,7 +168,7 @@ class Game {
 			goRoom(command);
 		else if (commandWord.equals("pause"))
 			pauseTime = new Date();
-		else if (commandWord.equals("resume")){
+		else if (commandWord.equals("resume")) {
 			Date rightNow = new Date();
 			endTime = new Date(rightNow.getTime() - pauseTime.getTime() + endTime.getTime());
 		}
@@ -218,6 +222,16 @@ class Game {
 			currentRoom = nextRoom;
 			describeRoom();
 		}
+	}
+
+	private void createCharacter(String name, Room location) {
+		Character newCharacter = new Character(name, location);
+		listOfCharacters.add(newCharacter);
+	}
+
+	private void createItem(Room location, int weight) {
+		Items newItem = new Items(location, weight);
+		items.addToInventory(newItem);
 	}
 
 }
