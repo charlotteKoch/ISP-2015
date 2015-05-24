@@ -232,6 +232,7 @@ class Game {
 		else if (nextRoom.getRoomName().equalsIgnoreCase("physics classroom")) {
 			if (inventoryItems.contains(key)) {
 				currentRoom = nextRoom;
+				describeRoom();
 			} else {
 				System.out.println("The door is locked! Maybe Mr.Hitchcock has the key...");
 			}
