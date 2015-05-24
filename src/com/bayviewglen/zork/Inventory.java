@@ -29,4 +29,12 @@ public class Inventory {
 		}
 		return canAdd;
 	}
+
+	public boolean contains(Items name) {
+		if (inventory.contains(name)) {
+			return true;
+		}
+		return false;
+	}
+
 }

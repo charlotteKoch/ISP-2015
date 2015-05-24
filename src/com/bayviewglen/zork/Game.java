@@ -38,7 +38,8 @@ class Game {
 	// masterRoomMap.get("GREAT_ROOM") will return the Room Object that is the
 	// Great Room (assuming you have one).
 	private ArrayList<Character> listOfCharacters = new ArrayList<Character>();
-	private Inventory items = new Inventory();
+	private Inventory inventoryItems = new Inventory();
+	private Items key, myBackpack, sabaBackpack, USB;
 
 	private HashMap<String, Room> masterRoomMap;
 
@@ -107,6 +108,8 @@ class Game {
 			e.printStackTrace();
 		}
 		parser = new Parser();
+
+		initializeItems();
 	}
 
 	/**
@@ -132,6 +135,14 @@ class Game {
 			}
 		}
 		System.out.println("Thank you for playing.  Good bye.");
+	}
+
+	public void initializeItems() {
+
+		key = createItem(masterRoomMap.get("SCIENCES_OFFICE"), 1);
+		sabaBackpack = createItem(masterRoomMap.get("PHYSICS_CLASSROOM"), 6);
+		myBackpack = createItem(masterRoomMap.get("MR.AULD'S_OFFICE"), 6);
+		USB = createItem(masterRoomMap.get("PHYSICS_CLASSROOM"), 2);
 	}
 
 	/**
@@ -218,7 +229,13 @@ class Game {
 
 		if (nextRoom == null)
 			System.out.println("There is no door!");
-		else {
+		else if (nextRoom.getRoomName().equalsIgnoreCase("physics classroom")) {
+			if (inventoryItems.contains(key)) {
+				currentRoom = nextRoom;
+			} else {
+				System.out.println("The door is locked! Maybe Mr.Hitchcock has the key...");
+			}
+		} else {
 			currentRoom = nextRoom;
 			describeRoom();
 		}
@@ -229,9 +246,9 @@ class Game {
 		listOfCharacters.add(newCharacter);
 	}
 
-	private void createItem(Room location, int weight) {
+	private Items createItem(Room location, int weight) {
 		Items newItem = new Items(location, weight);
-		items.addToInventory(newItem);
+		return newItem;
 	}
 
 }
