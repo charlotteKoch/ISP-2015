@@ -27,7 +27,7 @@ class Game {
 	private Parser parser;
 	private Room currentRoom;
 	private Date endTime;
-	
+
 	// This is a MASTER object that contains all of the rooms and is easily
 	// accessible.
 	// The key will be the name of the room -> no spaces (Use all caps and
@@ -112,23 +112,22 @@ class Game {
 
 		Date now = new Date();
 		endTime = new Date(now.getTime() + 6000 * 1000L);
-		
+
 		// Enter the main command loop. Here we repeatedly read commands and
 		// execute them until the game is over.
 
 		boolean finished = false;
 		while (!finished) {
-			
+
 			Command command = parser.getCommand();
 			finished = processCommand(command);
-			if(new Date().after(endTime)){
+			if (new Date().after(endTime)) {
 				System.out.println("Oh no Mr.DesLauriers found you! You weren't fast enough!");
 				finished = true;
 			}
 		}
 		System.out.println("Thank you for playing.  Good bye.");
 	}
-	
 
 	/**
 	 * Print out the opening message for the player.
