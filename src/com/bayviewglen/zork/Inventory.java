@@ -37,4 +37,18 @@ public class Inventory {
 		return false;
 	}
 
+	public void removeItem(String removeName) {
+		int length = inventory.size();
+		int count = 0;
+		for (int x = 0; x < length; x++) {
+			if (removeName.equals(inventory.get(x).getName())) {
+				inventory.remove(x);
+				count++;
+			}
+		}
+		if (count != 0) {
+			System.out.println("Ummmm...you don't have that item...");
+		}
+	}
+
 }

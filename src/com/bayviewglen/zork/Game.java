@@ -139,10 +139,9 @@ class Game {
 
 	public void initializeItems() {
 
-		key = createItem(masterRoomMap.get("SCIENCES_OFFICE"), 1);
-		sabaBackpack = createItem(masterRoomMap.get("PHYSICS_CLASSROOM"), 6);
-		myBackpack = createItem(masterRoomMap.get("MR.AULD'S_OFFICE"), 6);
-		USB = createItem(masterRoomMap.get("PHYSICS_CLASSROOM"), 2);
+		key = createItem("key", masterRoomMap.get("SCIENCES_OFFICE"), 1);
+		sabaBackpack = createItem("sabaBackpack", masterRoomMap.get("PHYSICS_CLASSROOM"), 6);
+		myBackpack = createItem("myBackpack", masterRoomMap.get("MR.AULD'S_OFFICE"), 6);
 	}
 
 	/**
@@ -185,7 +184,10 @@ class Game {
 		}
 		// else if (commandWord.equals("grab"))
 		// else if (commandWord.equals("talk"))
-		// else if (commandWord.equals("give"))
+		else if (commandWord.equals("drop")) {
+			dropItem(command);
+		}
+		// else if (commandWord.equals("show"))
 		else if (commandWord.equals("quit")) {
 			if (command.hasSecondWord())
 				System.out.println("Quit what?");
@@ -232,6 +234,7 @@ class Game {
 		else if (nextRoom.getRoomName().equalsIgnoreCase("physics classroom")) {
 			if (inventoryItems.contains(key)) {
 				currentRoom = nextRoom;
+				System.out.println("You used the key to get into the physics classroom.");
 				describeRoom();
 			} else {
 				System.out.println("The door is locked! Maybe Mr.Hitchcock has the key...");
@@ -247,9 +250,23 @@ class Game {
 		listOfCharacters.add(newCharacter);
 	}
 
-	private Items createItem(Room location, int weight) {
-		Items newItem = new Items(location, weight);
+	private Items createItem(String name, Room location, int weight) {
+		Items newItem = new Items(name, location, weight);
 		return newItem;
+	}
+
+	private void dropItem(Command command) {
+		if (!command.hasSecondWord()) {
+			System.out.println("Drop what?");
+		} else {
+			if (currentRoom.getRoomName().equalsIgnoreCase("hallway") && command.getSecondWord().equals(sabaBackpack)) {
+				sabaBackpack.setLocation(currentRoom);
+			} else if (!currentRoom.getRoomName().equalsIgnoreCase("hallway") && command.getSecondWord().equals(sabaBackpack)) {
+				System.out.println("Do you really think you should be throwing Saba under the bus like this? She needs her textbook!");
+			} else {
+				inventoryItems.removeItem(command.getSecondWord());
+			}
+		}
 	}
 
 }
