@@ -40,6 +40,7 @@ class Game {
 	private ArrayList<Character> listOfCharacters = new ArrayList<Character>();
 	private Inventory inventoryItems = new Inventory();
 	private Items key, myBackpack, sabaBackpack, USB;
+	private Inventory allItems = new Inventory();
 
 	private HashMap<String, Room> masterRoomMap;
 
@@ -181,8 +182,9 @@ class Game {
 		else if (commandWord.equals("resume")) {
 			Date rightNow = new Date();
 			endTime = new Date(rightNow.getTime() - pauseTime.getTime() + endTime.getTime());
+		} else if (commandWord.equals("grab")) {
+			grabItem(command);
 		}
-		// else if (commandWord.equals("grab"))
 		// else if (commandWord.equals("talk"))
 		else if (commandWord.equals("drop")) {
 			dropItem(command);
@@ -252,6 +254,7 @@ class Game {
 
 	private Items createItem(String name, Room location, int weight) {
 		Items newItem = new Items(name, location, weight);
+		allItems.addToInventory(newItem);
 		return newItem;
 	}
 
@@ -261,6 +264,8 @@ class Game {
 		} else {
 			if (currentRoom.getRoomName().equalsIgnoreCase("hallway") && command.getSecondWord().equals(sabaBackpack)) {
 				sabaBackpack.setLocation(currentRoom);
+				inventoryItems.removeItem(command.getSecondWord());
+				talkCharacter();
 			} else if (!currentRoom.getRoomName().equalsIgnoreCase("hallway") && command.getSecondWord().equals(sabaBackpack)) {
 				System.out.println("Do you really think you should be throwing Saba under the bus like this? She needs her textbook!");
 			} else {
@@ -269,4 +274,17 @@ class Game {
 		}
 	}
 
+	private void grabItem(Command command) {
+		if (!command.hasSecondWord()) {
+			System.out.println("Grab what?");
+		}
+		else {
+				if (inventoryItems.containsName(command.getSecondWord())){
+					System.out.println("Why are you trying to pick up something you already have?");
+				}
+				else if (allItems.containsName(command.getSecondWord()) && allItems.compareLocation(command.getSecondWord())){
+					inventoryItems.addToInventory(item)
+					}
+		}
+	}
 }

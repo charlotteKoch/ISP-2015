@@ -14,10 +14,12 @@ public class Inventory {
 	}
 
 	public void addToInventory(Items item) {
-		inventory.add(item);
 		boolean check = checkWeight(item);
 		if (check) {
+			inventory.add(item);
 			weight += item.weight;
+		} else {
+			System.out.println("You only have one back! How do you plan to carry two backpacks?");
 		}
 	}
 
@@ -37,7 +39,16 @@ public class Inventory {
 		return false;
 	}
 
-	public void removeItem(String removeName) {
+	public boolean containsName(String name) {
+		for (int x = 0; x < inventory.size(); x++) {
+			if (inventory.get(x).getName().equals(name)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public void removeItem(Item removeItem) {
 		int length = inventory.size();
 		int count = 0;
 		for (int x = 0; x < length; x++) {
@@ -49,6 +60,15 @@ public class Inventory {
 		if (count != 0) {
 			System.out.println("Ummmm...you don't have that item...");
 		}
+	}
+
+	public boolean compareLocation(String location) {
+		for (int x = 0; x < inventory.size(); x++) {
+			if (inventory.get(x).location.getRoomName().equalsIgnoreCase(location)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

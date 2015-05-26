@@ -15,6 +15,10 @@ public class Items {
 		location = currentRoom;
 	}
 
+	public Room getLocation() {
+		return location;
+	}
+
 	public String getName() {
 		return name;
 	}
