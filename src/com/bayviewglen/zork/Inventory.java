@@ -1,14 +1,14 @@
 package com.bayviewglen.zork;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Inventory {
-	private ArrayList<Items> inventory;
+	private HashMap<String, Items> inventory;
 	private int weight;
 	private int maxWeight;
 
 	public Inventory() {
-		inventory = new ArrayList<Items>();
+		inventory = new HashMap<String, Items>();
 		weight = 0;
 		maxWeight = 10;
 	}
@@ -16,7 +16,7 @@ public class Inventory {
 	public void addToInventory(Items item) {
 		boolean check = checkWeight(item);
 		if (check) {
-			inventory.add(item);
+			inventory.put(item.getName(), item);
 			weight += item.weight;
 		} else {
 			System.out.println("You only have one back! How do you plan to carry two backpacks?");
@@ -32,43 +32,20 @@ public class Inventory {
 		return canAdd;
 	}
 
-	public boolean contains(Items name) {
-		if (inventory.contains(name)) {
-			return true;
-		}
-		return false;
-	}
-
-	public boolean containsName(String name) {
-		for (int x = 0; x < inventory.size(); x++) {
-			if (inventory.get(x).getName().equals(name)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public void removeItem(Item removeItem) {
-		int length = inventory.size();
-		int count = 0;
-		for (int x = 0; x < length; x++) {
-			if (removeName.equals(inventory.get(x).getName())) {
-				inventory.remove(x);
-				count++;
-			}
-		}
-		if (count != 0) {
+	public void removeItem(String removeItem) {
+		if (!inventory.containsKey(removeItem)) {
 			System.out.println("Ummmm...you don't have that item...");
+		} else {
+			inventory.remove(removeItem);
 		}
 	}
 
-	public boolean compareLocation(String location) {
-		for (int x = 0; x < inventory.size(); x++) {
-			if (inventory.get(x).location.getRoomName().equalsIgnoreCase(location)) {
-				return true;
-			}
-		}
-		return false;
+	public boolean contains(String item) {
+		return inventory.containsKey(item);
 	}
 
+	public Items getItem(String item) {
+		Items getItem = inventory.get(item);
+		return getItem;
+	}
 }

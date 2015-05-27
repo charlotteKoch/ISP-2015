@@ -37,7 +37,7 @@ class Game {
 	// In a hashmap keys are case sensitive.
 	// masterRoomMap.get("GREAT_ROOM") will return the Room Object that is the
 	// Great Room (assuming you have one).
-	private ArrayList<Character> listOfCharacters = new ArrayList<Character>();
+	private HashMap<String, Character> listOfCharacters = new HashMap<String, Character>();
 	private Inventory inventoryItems = new Inventory();
 	private Items key, myBackpack, sabaBackpack, USB;
 	private Inventory allItems = new Inventory();
@@ -249,7 +249,7 @@ class Game {
 
 	private void createCharacter(String name, Room location) {
 		Character newCharacter = new Character(name, location);
-		listOfCharacters.add(newCharacter);
+		listOfCharacters.put(name, newCharacter);
 	}
 
 	private Items createItem(String name, Room location, int weight) {
@@ -262,7 +262,9 @@ class Game {
 		if (!command.hasSecondWord()) {
 			System.out.println("Drop what?");
 		} else {
-			if (currentRoom.getRoomName().equalsIgnoreCase("hallway") && command.getSecondWord().equals(sabaBackpack)) {
+			if (!inventoryItems.contains(command.getSecondWord())) {
+				System.out.println("You can't drop something you don't have!");
+			} else if (currentRoom.getRoomName().equalsIgnoreCase("hallway") && command.getSecondWord().equals("sabaBackpack")) {
 				sabaBackpack.setLocation(currentRoom);
 				inventoryItems.removeItem(command.getSecondWord());
 				talkCharacter();
@@ -275,14 +277,18 @@ class Game {
 	}
 
 	private void grabItem(Command command) {
+		String itemRoom = "";
+		String currentRoom = "";
 		if (!command.hasSecondWord()) {
 			System.out.println("Grab what?");
 		}
 		else {
-				if (inventoryItems.containsName(command.getSecondWord())){
+				if (inventoryItems.contains(command.getSecondWord())){
 					System.out.println("Why are you trying to pick up something you already have?");
 				}
-				else if (allItems.containsName(command.getSecondWord()) && allItems.compareLocation(command.getSecondWord())){
+				else if (allItems.contains(command.getSecondWord()){
+					itemRoom = allItems.getItem((command.getSecondWord()).getLocation().getRoomName();
+					currentRoom = currentRoom.getRoomName();
 					inventoryItems.addToInventory(item)
 					}
 		}
