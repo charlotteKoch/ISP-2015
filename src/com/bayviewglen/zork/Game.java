@@ -2,7 +2,6 @@ package com.bayviewglen.zork;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -278,19 +277,21 @@ class Game {
 
 	private void grabItem(Command command) {
 		String itemRoom = "";
-		String currentRoom = "";
+		String currentRoomName = "";
 		if (!command.hasSecondWord()) {
 			System.out.println("Grab what?");
-		}
-		else {
-				if (inventoryItems.contains(command.getSecondWord())){
-					System.out.println("Why are you trying to pick up something you already have?");
+		} else {
+			if (inventoryItems.contains(command.getSecondWord())) {
+				System.out.println("Why are you trying to pick up something you already have?");
+			} else if (!allItems.contains(command.getSecondWord())) {
+				System.out.println("This item doesn't exist!");
+			} else if (allItems.contains(command.getSecondWord())) {
+				String itemRoomName = allItems.getItem(command.getSecondWord()).getLocation().getRoomName();
+				currentRoomName = currentRoom.getRoomName();
+				if (itemRoomName.equalsIgnoreCase(currentRoomName)) {
+					inventoryItems.addToInventory(allItems.getItem(command.getSecondWord()));
 				}
-				else if (allItems.contains(command.getSecondWord()){
-					itemRoom = allItems.getItem((command.getSecondWord()).getLocation().getRoomName();
-					currentRoom = currentRoom.getRoomName();
-					inventoryItems.addToInventory(item)
-					}
+			}
 		}
 	}
 }
