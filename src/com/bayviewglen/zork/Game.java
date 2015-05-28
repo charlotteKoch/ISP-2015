@@ -183,13 +183,13 @@ class Game {
 			endTime = new Date(rightNow.getTime() - pauseTime.getTime() + endTime.getTime());
 		} else if (commandWord.equals("grab")) {
 			grabItem(command);
-		}
-		// else if (commandWord.equals("talk"))
-		else if (commandWord.equals("drop")) {
+		} else if (commandWord.equals("talk")) {
+			talkCharacter(command);
+		} else if (commandWord.equals("drop")) {
 			dropItem(command);
-		}
-		// else if (commandWord.equals("show"))
-		else if (commandWord.equals("quit")) {
+		} else if (commandWord.equals("show")) {
+			map(command);
+		} else if (commandWord.equals("quit")) {
 			if (command.hasSecondWord())
 				System.out.println("Quit what?");
 			else
@@ -198,6 +198,32 @@ class Game {
 			System.out.println("Do you really think you should be eating at a time like this?");
 		}
 		return false;
+	}
+
+	private void map(Command command) {
+		if (!command.hasSecondWord()) {
+			System.out.println("Show what?");
+		} else if (command.getSecondWord().equalsIgnoreCase("map")) {
+			System.out.println(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ");
+			System.out.printf("|%21s|%21s|%21s|\n", " ", " ", " ");
+			System.out.printf("|%21s|%21s|%21s|\n", " ", " ", " ");
+			System.out.printf("|%21s|%21s|%21s|\n", "Mentor Classroom  ", "Physics Classroom  ", "Sciences Office   ");
+			System.out.printf("|%21s|%21s|%21s|\n", " ", " ", " ");
+			System.out.printf("|%21s|%21s|%21s|\n", " ", " ", " ");
+			System.out.println(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ");
+			System.out.printf("|%21s|%21s|%21s|\n", " ", " ", " ");
+			System.out.printf("|%21s|%21s|%21s|\n", "Hallway 1      ", "Hallway 2      ", "Hallway 3      ");
+			System.out.printf("|%21s|%21s|%21s|\n", " ", " ", " ");
+			System.out.println(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ");
+			System.out.printf("%22s|%21s|%21s|\n", " N           ", " ", " ");
+			System.out.printf("%22s|%21s|%21s|\n", " |           ", " ", " ");
+			System.out.printf("%22s|%21s|%21s|\n", "W -- -- E       ", "Mr. Auld's Office  ", "Tech Office     ");
+			System.out.printf("%22s|%21s|%21s|\n", " |           ", " ", " ");
+			System.out.printf("%22s|%21s|%21s|\n", " S           ", " ", " ");
+			System.out.println("                       - - - - - - - - - - - - - - - - - - - - - - ");
+		} else {
+			describeRoom();
+		}
 	}
 
 	// implementations of user commands:
@@ -233,7 +259,7 @@ class Game {
 		if (nextRoom == null)
 			System.out.println("There is no door!");
 		else if (nextRoom.getRoomName().equalsIgnoreCase("physics classroom")) {
-			if (inventoryItems.contains(key)) {
+			if (inventoryItems.contains("key")) {
 				currentRoom = nextRoom;
 				System.out.println("You used the key to get into the physics classroom.");
 				describeRoom();
@@ -293,5 +319,31 @@ class Game {
 				}
 			}
 		}
+	}
+
+	private void talkCharacter(Command command) {
+		Scanner keyboard = new Scanner(System.in);
+
+		if (!command.hasSecondWord()) {
+			System.out.println("Talk to who?");
+		} else {
+			String word = command.getSecondWord();
+			if (word.equalsIgnoreCase("Mr.Hitchcock") && !(currentRoom.getRoomName().equalsIgnoreCase("sciences office"))) {
+				System.out.println("Mr.Hitchcock doesn't seem to be in " + currentRoom.getRoomName());
+			} else if (word.equalsIgnoreCase("Mr.Hitchcock")) {
+				System.out.println("Mr.Hitchcock: Hello there, you must be looking to get in to the physics classroom. I saw a bag in there this morning and I knew someone would need it.");
+				System.out.println("Mr.Hitchcock: Do you want the key for the physics classroom?");
+				String decision = keyboard.nextLine();
+				if (decision.equalsIgnoreCase("no")) {
+					System.out.println("Mr.Hitchcock: I hope you don't need that backpack.");
+				} else {
+					System.out.println("Mr.Hitchcock: So you want the key? That means it's time for a riddle.");
+					System.out
+							.println("Mr.Hitchcock: ou have been given the task of transporting 3,000 apples 1,000 miles from Appleland to Bananaville. \nYour truck can carry 1,000 apples at a time. \nEvery time you travel a mile towards Bananaville you must pay a tax of 1 apple but you pay nothing when going in the other direction (towards Appleland).");
+				}
+			}
+		}
+
+		keyboard.close();
 	}
 }
