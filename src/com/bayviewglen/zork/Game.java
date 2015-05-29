@@ -26,6 +26,7 @@ import java.util.Scanner;
 class Game {
 	private Parser parser;
 	private Room currentRoom;
+	private Room previousRoom;
 	private Date endTime;
 	private Date pauseTime;
 
@@ -245,6 +246,7 @@ class Game {
 	 * otherwise print an error message.
 	 */
 	private void goRoom(Command command) {
+		boolean done = false;
 		if (!command.hasSecondWord()) {
 			// if there is no second word, we don't know where to go...
 			System.out.println("Go where?");
@@ -253,23 +255,45 @@ class Game {
 
 		String direction = command.getSecondWord();
 
-		// Try to leave current room.
-		Room nextRoom = currentRoom.nextRoom(direction);
-
-		if (nextRoom == null)
-			System.out.println("There is no door!");
-		else if (nextRoom.getRoomName().equalsIgnoreCase("physics classroom")) {
-			if (inventoryItems.contains("key")) {
-				currentRoom = nextRoom;
-				System.out.println("You used the key to get into the physics classroom.");
-				describeRoom();
+		if (direction.equalsIgnoreCase("back")) {
+			if (previousRoom == null) {
+				System.out.println("Go where?");
+				done = true;
 			} else {
-				System.out.println("The door is locked! Maybe Mr.Hitchcock has the key...");
+				currentRoom = previousRoom;
+				describeRoom();
+				done = true;
 			}
-		} else {
-			currentRoom = nextRoom;
-			describeRoom();
 		}
+
+		while (!done) {
+
+			// Try to leave current room.
+			Room nextRoom = currentRoom.nextRoom(direction);
+
+			if (nextRoom == null) {
+				System.out.println("There is no door!");
+				done = true;
+			} else if (nextRoom.getRoomName().equalsIgnoreCase("physics classroom")) {
+				if (inventoryItems.contains("key")) {
+					previousRoom = currentRoom;
+					currentRoom = nextRoom;
+					System.out.println("You used the key to get into the physics classroom.");
+					describeRoom();
+					done = true;
+				} else {
+					System.out.println("The door is locked! Maybe Mr.Hitchcock has the key...");
+					done = true;
+				}
+			} else {
+				previousRoom = currentRoom;
+				currentRoom = nextRoom;
+				describeRoom();
+				done = true;
+			}
+
+		}
+
 	}
 
 	private void createCharacter(String name, Room location) {
@@ -339,7 +363,7 @@ class Game {
 				} else {
 					System.out.println("Mr.Hitchcock: So you want the key? That means it's time for a riddle.");
 					System.out
-							.println("Mr.Hitchcock: ou have been given the task of transporting 3,000 apples 1,000 miles from Appleland to Bananaville. \nYour truck can carry 1,000 apples at a time. \nEvery time you travel a mile towards Bananaville you must pay a tax of 1 apple but you pay nothing when going in the other direction (towards Appleland).");
+							.println("Mr.Hitchcock: You have been given the task of transporting 3,000 apples 1,000 miles from Appleland to Bananaville. \nYour truck can carry 1,000 apples at a time. \nEvery time you travel a mile towards Bananaville you must pay a tax of 1 apple but you pay nothing when going in the other direction (towards Appleland).");
 				}
 			}
 		}
