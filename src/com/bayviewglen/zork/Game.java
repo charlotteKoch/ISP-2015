@@ -197,7 +197,10 @@ class Game {
 				return true; // signal that we want to quit
 		} else if (commandWord.equals("eat")) {
 			System.out.println("Do you really think you should be eating at a time like this?");
+		} else if (commandWord.equals("use")) {
+			useItem(command);
 		}
+
 		return false;
 	}
 
@@ -316,7 +319,8 @@ class Game {
 			} else if (currentRoom.getRoomName().equalsIgnoreCase("hallway") && command.getSecondWord().equals("sabaBackpack")) {
 				sabaBackpack.setLocation(currentRoom);
 				inventoryItems.removeItem(command.getSecondWord());
-				talkCharacter();
+				System.out.println("Saba: thanks for bringing my backpack! Here's the USB.");
+				inventoryItems.addToInventory(createItem("USB", masterRoomMap.get("hallway"), 2));
 			} else if (!currentRoom.getRoomName().equalsIgnoreCase("hallway") && command.getSecondWord().equals(sabaBackpack)) {
 				System.out.println("Do you really think you should be throwing Saba under the bus like this? She needs her textbook!");
 			} else {
@@ -326,7 +330,7 @@ class Game {
 	}
 
 	private void grabItem(Command command) {
-		String itemRoom = "";
+		String itemRoomName = "";
 		String currentRoomName = "";
 		if (!command.hasSecondWord()) {
 			System.out.println("Grab what?");
@@ -336,7 +340,7 @@ class Game {
 			} else if (!allItems.contains(command.getSecondWord())) {
 				System.out.println("This item doesn't exist!");
 			} else if (allItems.contains(command.getSecondWord())) {
-				String itemRoomName = allItems.getItem(command.getSecondWord()).getLocation().getRoomName();
+				itemRoomName = allItems.getItem(command.getSecondWord()).getLocation().getRoomName();
 				currentRoomName = currentRoom.getRoomName();
 				if (itemRoomName.equalsIgnoreCase(currentRoomName)) {
 					inventoryItems.addToInventory(allItems.getItem(command.getSecondWord()));
@@ -369,5 +373,31 @@ class Game {
 		}
 
 		keyboard.close();
+	}
+
+	private boolean useItem(Command command) {
+		if (!command.hasSecondWord()) {
+			System.out.println("What are you trying to use?");
+		} else if (command.hasSecondWord() && command.getSecondWord().equals("USB") && inventoryItems.contains("USB")) {
+			System.out.println("file 2");
+			System.out.println("file 3");
+			System.out.println("file 8");
+			System.out.print("Please pick a file to use: ");
+			Scanner keyboard = new Scanner(System.in);
+			String fileNumber = keyboard.nextLine();
+			if (!fileNumber.equals("3")) {
+				System.out
+						.println("Oh no! Looks like Saba had some nasty files on her USB and you downloaded them! Wonder what those could have been for... Anyway, you took your computer to the tech office which took 10 minutes! Better hurry up and download the right file so you can finish your project!");
+				subtractTime();
+			} else {
+
+				return true;
+			}
+		} else if (command.hasSecondWord() && command.getSecondWord().equals("USB") && !inventoryItems.contains("USB")) {
+			System.out.println("How are you planning to use something that you don't have?");
+		} else {
+			System.out.println("You can't use that item for anything!");
+		}
+		return false;
 	}
 }
