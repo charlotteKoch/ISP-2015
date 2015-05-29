@@ -111,6 +111,7 @@ class Game {
 		parser = new Parser();
 
 		initializeItems();
+		initializeCharacters();
 	}
 
 	/**
@@ -143,6 +144,12 @@ class Game {
 		key = createItem("key", masterRoomMap.get("SCIENCES_OFFICE"), 1);
 		sabaBackpack = createItem("sabaBackpack", masterRoomMap.get("PHYSICS_CLASSROOM"), 6);
 		myBackpack = createItem("myBackpack", masterRoomMap.get("MR.AULD'S_OFFICE"), 6);
+	}
+
+	public void initializeCharacters() {
+		createCharacter("Saba", masterRoomMap.get("HALLWAY"));
+		createCharacter("Hitchcock", masterRoomMap.get("SCIENCES_OFFICE"));
+		createCharacter("Auld", masterRoomMap.get("Mr.AULD'S_OFFICE"));
 	}
 
 	/**
@@ -316,12 +323,12 @@ class Game {
 		} else {
 			if (!inventoryItems.contains(command.getSecondWord())) {
 				System.out.println("You can't drop something you don't have!");
-			} else if (currentRoom.getRoomName().equalsIgnoreCase("hallway") && command.getSecondWord().equals("sabaBackpack")) {
+			} else if (currentRoom.getRoomName().equalsIgnoreCase("HALLWAY") && command.getSecondWord().equals("sabaBackpack")) {
 				sabaBackpack.setLocation(currentRoom);
 				inventoryItems.removeItem(command.getSecondWord());
 				System.out.println("Saba: thanks for bringing my backpack! Here's the USB.");
-				inventoryItems.addToInventory(createItem("USB", masterRoomMap.get("hallway"), 2));
-			} else if (!currentRoom.getRoomName().equalsIgnoreCase("hallway") && command.getSecondWord().equals(sabaBackpack)) {
+				inventoryItems.addToInventory(createItem("USB", masterRoomMap.get("HALLWAY"), 2));
+			} else if (!currentRoom.getRoomName().equalsIgnoreCase("HALLWAY") && command.getSecondWord().equals(sabaBackpack)) {
 				System.out.println("Do you really think you should be throwing Saba under the bus like this? She needs her textbook!");
 			} else {
 				inventoryItems.removeItem(command.getSecondWord());
