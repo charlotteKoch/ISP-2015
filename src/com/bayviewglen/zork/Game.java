@@ -41,6 +41,8 @@ class Game {
 	private Inventory inventoryItems = new Inventory();
 	private Items key, myBackpack, sabaBackpack, USB;
 	private Inventory allItems = new Inventory();
+	private int scienceCounter = 0;
+	private boolean finished = false;
 
 	private HashMap<String, Room> masterRoomMap;
 
@@ -110,7 +112,6 @@ class Game {
 		}
 		parser = new Parser();
 
-		initializeItems();
 		initializeCharacters();
 	}
 
@@ -126,10 +127,11 @@ class Game {
 		// Enter the main command loop. Here we repeatedly read commands and
 		// execute them until the game is over.
 
-		boolean finished = false;
-		while (!finished) {
+		Command command = parser.getCommand();
+		finished = processCommand(command);
 
-			Command command = parser.getCommand();
+		while (!finished) {
+			command = parser.getCommand();
 			finished = processCommand(command);
 			if (new Date().after(endTime)) {
 				System.out.println("Oh no Mr.DesLauriers found you! You weren't fast enough!");
@@ -137,13 +139,7 @@ class Game {
 			}
 		}
 		System.out.println("Thank you for playing.  Good bye.");
-	}
 
-	public void initializeItems() {
-
-		key = createItem("key", masterRoomMap.get("SCIENCES_OFFICE"), 1);
-		sabaBackpack = createItem("sabaBackpack", masterRoomMap.get("PHYSICS_CLASSROOM"), 6);
-		myBackpack = createItem("myBackpack", masterRoomMap.get("MR.AULD'S_OFFICE"), 6);
 	}
 
 	public void initializeCharacters() {
@@ -203,7 +199,8 @@ class Game {
 			if (command.hasSecondWord())
 				System.out.println("Quit what?");
 			else
-				return true; // signal that we want to quit
+				return true;
+			; // signal that we want to quit
 		} else if (commandWord.equals("eat")) {
 			System.out.println("Do you really think you should be eating at a time like this?");
 		} else if (commandWord.equals("use")) {
@@ -211,6 +208,15 @@ class Game {
 		}
 
 		return false;
+	}
+
+	private String saySomething(Command command) {
+		if (!command.hasSecondWord()) {
+			return null;
+		} else {
+			String word = command.getSecondWord();
+			return word;
+		}
 	}
 
 	private void map(Command command) {
@@ -246,8 +252,7 @@ class Game {
 	 * message and a list of the command words.
 	 */
 	private void printHelp() {
-		System.out.println("You are lost. You are alone. You wander");
-		System.out.println("around at Monash Uni, Peninsula Campus.");
+		System.out.println("You are trying to finish your computer science project before Mr.DesLauriers catches you. Be fast, you don't have much time!");
 		System.out.println();
 		System.out.println("Your command words are:");
 		parser.showCommands();
@@ -259,6 +264,7 @@ class Game {
 	 */
 	private void goRoom(Command command) {
 		boolean done = false;
+		Date scienceTime = new Date();
 		if (!command.hasSecondWord()) {
 			// if there is no second word, we don't know where to go...
 			System.out.println("Go where?");
@@ -297,6 +303,25 @@ class Game {
 					System.out.println("The door is locked! Maybe Mr.Hitchcock has the key...");
 					done = true;
 				}
+			} else if (nextRoom.getRoomName().equalsIgnoreCase("sciences office")) {
+				if (scienceCounter == 0) {
+					nextRoom = currentRoom;
+					System.out.println("Oh no! It looks like Mr.Deslauriers is in his office. If you go in he might catch you...maybe you should wait a minute.");
+					Date now = new Date();
+					scienceTime = new Date(now.getTime() + 60 * 1000);
+					done = true;
+					scienceCounter++;
+				} else if (new Date().after(scienceTime)) {
+					previousRoom = currentRoom;
+					currentRoom = nextRoom;
+					describeRoom();
+					scienceCounter++;
+					done = true;
+
+				} else {
+					System.out.println("Oh no! Mr.Deslauriers Caught you.");
+					done = true;
+				}
 			} else {
 				previousRoom = currentRoom;
 				currentRoom = nextRoom;
@@ -325,12 +350,12 @@ class Game {
 		} else {
 			if (!inventoryItems.contains(command.getSecondWord())) {
 				System.out.println("You can't drop something you don't have!");
-			} else if (currentRoom.getRoomName().equalsIgnoreCase("HALLWAY") && command.getSecondWord().equals("sabaBackpack")) {
+			} else if (currentRoom.getRoomName().equalsIgnoreCase("HALLWAY 1") && command.getSecondWord().equals("sabaBackpack")) {
 				sabaBackpack.setLocation(currentRoom);
 				inventoryItems.removeItem(command.getSecondWord());
-				System.out.println("Saba: thanks for bringing my backpack! Here's the USB.");
-				inventoryItems.addToInventory(createItem("USB", masterRoomMap.get("HALLWAY"), 2));
-			} else if (!currentRoom.getRoomName().equalsIgnoreCase("HALLWAY") && command.getSecondWord().equals(sabaBackpack)) {
+				System.out.println("Saba: Thanks for bringing my backpack! Here's the USB.");
+				inventoryItems.addToInventory(createItem("USB", masterRoomMap.get("HALLWAY 1"), 2));
+			} else if (!currentRoom.getRoomName().equalsIgnoreCase("HALLWAY 1") && command.getSecondWord().equals(sabaBackpack)) {
 				System.out.println("Do you really think you should be throwing Saba under the bus like this? She needs her textbook!");
 			} else {
 				inventoryItems.removeItem(command.getSecondWord());
@@ -369,25 +394,55 @@ class Game {
 				System.out.println("Mr.Hitchcock: Hello there, you must be looking to get in to the physics classroom. I saw a bag in there this morning and I knew someone would need it.");
 				System.out.println("Mr.Hitchcock: Do you want the key for the physics classroom?");
 
-				Command decision = parser.getCommand();
+				Command choice = parser.getCommand();
+				String decision = saySomething(choice);
 
 				if (decision.equalsIgnoreCase("no")) {
 					System.out.println("Mr.Hitchcock: I hope you don't need that backpack.");
 				} else {
 					System.out.println("Mr.Hitchcock: So you want the key? That means it's time for a riddle.");
 					System.out
-							.println("Mr.Hitchcock: You have been given the task of transporting 3,000 apples 1,000 miles from Appleland to Bananaville. \nYour truck can carry 1,000 apples at a time. \nEvery time you travel a mile towards Bananaville you must pay a tax of 1 apple but you pay nothing when going in the other direction (towards Appleland).");
+							.println("Mr.Hitchcock: You have been given the task of transporting 3,000 apples 1,000 miles from Appleland to Bananaville. \nYour truck can carry 1,000 apples at a time. \nEvery time you travel a mile towards Bananaville you must pay a tax of 1 apple but you pay nothing when going in the \nother direction (towards Appleland).");
+					System.out.println("Mr.Hitchcok: If you can't figure out the answer just say nevermind. I won't give you the key but you can come back and try again later.");
+					Command answer = parser.getCommand();
+					String riddleAnswer = saySomething(answer);
+					while (!riddleAnswer.equalsIgnoreCase("833")) {
+						System.out.println("Mr.Hitchcock: That's not it...");
+						answer = parser.getCommand();
+						riddleAnswer = saySomething(answer);
+						if (riddleAnswer.equalsIgnoreCase("nevermind")) {
+							System.out.println("Mr.Hitchcock: I hope you don't need that backpack.");
+							return;
+						}
+					}
+					System.out.println("Mr.Hitchcock: You finally got the answer! Here's the key to the classroom. Have a great day!");
+					inventoryItems.addToInventory(createItem("key", masterRoomMap.get("SCIENCES_CLASSROOM"), 1));
 				}
+			} else if (word.equalsIgnoreCase("saba") && !(currentRoom.getRoomName().equalsIgnoreCase("hallway 1"))) {
+				System.out.println("Saba doesn't seem to be in " + currentRoom.getRoomName());
+			} else if (word.equalsIgnoreCase("saba")) {
+				if (!inventoryItems.contains("USB")) {
+					System.out
+							.println("Hey, you need that file for your project right? I left my backpack in the physics classroom and it has my USB in it. If you bring me my backpack I can give you the files.");
+				} else {
+					System.out.println("Can you put down my backpack please?");
+				}
+			} else if (word.equalsIgnoreCase("mr.auld") && !(currentRoom.getRoomName().equalsIgnoreCase("mr.auld's office"))) {
+				System.out.println("Mr.Auld doesn't seem to be in " + currentRoom.getRoomName());
+			} else {
+				System.out
+						.println("Mr.Auld: You muct be here to pick up yor backpack. I am disappointed that you left you bag in the hall, especially because it's a fire hazard. \nDon't do it again!");
+				inventoryItems.addToInventory(createItem("myBackpack", masterRoomMap.get("MR.AULD'S_OFFICE"), 6));
 			}
 		}
-
-		keyboard.close();
 	}
 
 	private boolean useItem(Command command) {
 		if (!command.hasSecondWord()) {
 			System.out.println("What are you trying to use?");
-		} else if (command.hasSecondWord() && command.getSecondWord().equals("USB") && inventoryItems.contains("USB")) {
+		} else if (command.getSecondWord().equalsIgnoreCase("USB") && !inventoryItems.contains("myBackpack")) {
+			System.out.println("How can you use the USB without your computer. You need your backpack to get your computer.");
+		} else if (command.hasSecondWord() && command.getSecondWord().equalsIgnoreCase("USB") && inventoryItems.contains("USB")) {
 			System.out.println("file 2");
 			System.out.println("file 3");
 			System.out.println("file 8");
@@ -402,11 +457,16 @@ class Game {
 
 				return true;
 			}
-		} else if (command.hasSecondWord() && command.getSecondWord().equals("USB") && !inventoryItems.contains("USB")) {
+		} else if (command.hasSecondWord() && command.getSecondWord().equalsIgnoreCase("USB") && !inventoryItems.contains("USB")) {
 			System.out.println("How are you planning to use something that you don't have?");
 		} else {
 			System.out.println("You can't use that item for anything!");
 		}
 		return false;
+	}
+
+	private void subtractTime() {
+		long ending = endTime.getTime();
+		endTime = new Date(ending - (60 * 10 * 1000));
 	}
 }
