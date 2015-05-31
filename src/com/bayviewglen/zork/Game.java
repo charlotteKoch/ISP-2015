@@ -190,6 +190,8 @@ class Game {
 			dropItem(command);
 		} else if (commandWord.equals("show")) {
 			map(command);
+		} else if (commandWord.equals("say")) {
+			saySomething(command);
 		} else if (commandWord.equals("quit")) {
 			if (command.hasSecondWord())
 				System.out.println("Quit what?");
@@ -346,8 +348,6 @@ class Game {
 	}
 
 	private void talkCharacter(Command command) {
-		Scanner keyboard = new Scanner(System.in);
-
 		if (!command.hasSecondWord()) {
 			System.out.println("Talk to who?");
 		} else {
@@ -357,7 +357,9 @@ class Game {
 			} else if (word.equalsIgnoreCase("Mr.Hitchcock")) {
 				System.out.println("Mr.Hitchcock: Hello there, you must be looking to get in to the physics classroom. I saw a bag in there this morning and I knew someone would need it.");
 				System.out.println("Mr.Hitchcock: Do you want the key for the physics classroom?");
-				String decision = keyboard.nextLine();
+
+				Command decision = parser.getCommand();
+
 				if (decision.equalsIgnoreCase("no")) {
 					System.out.println("Mr.Hitchcock: I hope you don't need that backpack.");
 				} else {
