@@ -1,5 +1,5 @@
 Room Name: Mentor Classroom
-Room Description:  This is your mentor classroom.
+Room Description:  This is your mentor classroom. <br>The equation 7x + 11x - 6 = 0 is written on the board.
 Exit Rooms: S-Hallway 1
 Room Name: Hallway 1
 Room Description:  This is the hallway outside of your mentor classroom.<br>Saba is standing by her locker in this hallway. 
@@ -11,7 +11,7 @@ Room Name: Hallway 3
 Room Description:  This is the hallway outside of the sciences office and the tech office. 
 Exit Rooms: W-Hallway 2, N-Sciences Office, S-Tech Office
 Room Name: Physics Classroom
-Room Description:  You are in the physics classroom.
+Room Description:  You are in the physics classroom. <br>Saba's backpack is on the table. 
 Exit Rooms: S-Hallway 2
 Room Name: Mr.Auld's Office
 Room Description:  You are in Mr.Auld's Office. <br>Mr.Auld is at his desk. 

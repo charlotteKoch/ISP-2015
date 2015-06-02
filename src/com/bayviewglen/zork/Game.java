@@ -49,6 +49,7 @@ class Game {
 
 	private void initializeItems() {
 		sabaBackpack = createItem("sabaBackpack", masterRoomMap.get("PHYSICS_CLASSROOM"), 6);
+		myBackpack = createItem("myBackpack", masterRoomMap.get("MR.AULD'S_OFFICE"), 6);
 	}
 
 	private void initRooms(String fileName) throws Exception {
@@ -266,6 +267,7 @@ class Game {
 		System.out.println();
 		System.out.println("Your command words are:");
 		parser.showCommands();
+		System.out.println("The existing items are: sabaBackpack, myBackpack, USB, key");
 	}
 
 	/**
@@ -308,9 +310,9 @@ class Game {
 		} else if (nextRoom.getRoomName().equalsIgnoreCase("sciences office")) {
 			if (scienceCounter == 0) {
 				nextRoom = currentRoom;
-				System.out.println("Oh no! It looks like Mr.DesLauriers is in his office. If you go in he might catch you...maybe you should wait a minute.");
+				System.out.println("Oh no! It looks like Mr.DesLauriers is in his office. If you go in he might catch you...maybe you should wait 20 seconds.");
 				Date now = new Date();
-				scienceTime = new Date(now.getTime() + 60 * 1000);
+				scienceTime = new Date(now.getTime() + 20 * 1000);
 				scienceCounter++;
 			} else if (!new Date().after(scienceTime)) {
 				System.out.println("Oh no! Mr.DesLauriers Caught you.");
@@ -435,9 +437,15 @@ class Game {
 			} else if (word.equalsIgnoreCase("mr.auld") && !(currentRoom.getRoomName().equalsIgnoreCase("mr.auld's office"))) {
 				System.out.println("Mr.Auld doesn't seem to be in " + currentRoom.getRoomName());
 			} else if (word.equalsIgnoreCase("mr.auld")) {
-				System.out
-						.println("Mr.Auld: You must be here to pick up yor backpack. I am disappointed that your left you bag in the hall, especially because it's a fire hazard. \nDon't do it again!");
-				inventoryItems.addToInventory(createItem("myBackpack", masterRoomMap.get("MR.AULD'S_OFFICE"), 6));
+				boolean add = inventoryItems.addToInventory(myBackpack);
+				if (!add) {
+					System.out
+							.println("Mr.Auld: You must be here to pick up yor backpack. I am disappointed that you left your bag in the hall, especially because it's a fire hazard. \nI can see you have a backpack with you already, how do you plan to carry two backpacks with only one back?");
+				} else {
+					System.out
+							.println("Mr.Auld: You must be here to pick up yor backpack. I am disappointed that you left your bag in the hall, especially because it's a fire hazard. \nHere's your backpack but please don't do it again!");
+
+				}
 			}
 		}
 	}
@@ -456,10 +464,10 @@ class Game {
 			String fileNumber = keyboard.nextLine();
 			if (!fileNumber.equals("3")) {
 				System.out
-						.println("Oh no! Looks like Saba had some nasty files on her USB and you downloaded them! Wonder what those could have been for... Anyway, you took your computer to the tech office which took 10 minutes! Better hurry up and download the right file so you can finish your project!");
+						.println("Oh no! Looks like Saba had some nasty files on her USB and you downloaded them! Wonder what those could have been for... \nAnyway, you took your computer to the tech office which took 10 minutes! \nBetter hurry up and download the right file so you can finish your project!");
 				subtractTime();
 			} else {
-				System.out.println("Congradulations! You uploaded the files to gitHub before Mr.DesLauriers caught you. Thanks for playing! ");
+				System.out.println("Congratulations! You uploaded the files to gitHub before Mr.DesLauriers caught you. Thanks for playing! ");
 				System.exit(0);
 			}
 		} else if (command.hasSecondWord() && command.getSecondWord().equalsIgnoreCase("USB") && !inventoryItems.contains("USB")) {

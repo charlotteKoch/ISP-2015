@@ -13,13 +13,14 @@ public class Inventory {
 		maxWeight = 10;
 	}
 
-	public void addToInventory(Items item) {
+	public boolean addToInventory(Items item) {
 		boolean check = checkWeight(item);
-		if (check) {
+		if (!check) {
+			return false;
+		} else {
 			inventory.put(item.getName(), item);
 			weight += item.getWeight();
-		} else if (!check) {
-			System.out.println("You only have one back! How do you plan to carry two backpacks?");
+			return true;
 		}
 	}
 
