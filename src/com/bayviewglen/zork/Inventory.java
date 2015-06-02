@@ -37,6 +37,7 @@ public class Inventory {
 			System.out.println("Ummmm...you don't have that item...");
 		} else {
 			inventory.remove(removeItem);
+			// subtract weight of item
 		}
 	}
 

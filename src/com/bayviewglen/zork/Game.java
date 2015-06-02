@@ -47,6 +47,10 @@ class Game {
 
 	private HashMap<String, Room> masterRoomMap;
 
+	private void initializeItems() {
+		sabaBackpack = createItem("sabaBackpack", masterRoomMap.get("PHYSICS_CLASSROOM"), 6);
+	}
+
 	private void initRooms(String fileName) throws Exception {
 		masterRoomMap = new HashMap<String, Room>();
 		Scanner roomScanner;
@@ -114,6 +118,7 @@ class Game {
 		parser = new Parser();
 
 		initializeCharacters();
+		initializeItems();
 	}
 
 	/**
@@ -309,7 +314,8 @@ class Game {
 				scienceCounter++;
 			} else if (!new Date().after(scienceTime)) {
 				System.out.println("Oh no! Mr.Deslauriers Caught you.");
-				finished = true;
+				System.out.println("The game is now over. Thanks for playing!");
+				System.exit(0);
 			} else {
 				previousRoom = currentRoom;
 				currentRoom = nextRoom;
@@ -386,6 +392,7 @@ class Game {
 				System.out.println("Mr.Hitchcock: Do you want the key for the physics classroom?");
 
 				Command choice = parser.getCommand();
+				Boolean lol = processCommand(choice);
 				if (choice.getCommandWord().equalsIgnoreCase("say")) {
 					String decision = saySomething(choice);
 
@@ -394,7 +401,7 @@ class Game {
 					} else {
 						System.out.println("Mr.Hitchcock: So you want the key? That means it's time for a riddle.");
 						System.out
-								.println("Mr.Hitchcock: You have been given the task of transporting 3,000 apples 1,000 miles from Appleland to Bananaville. \nYour truck can carry 1,000 apples at a time. \nEvery time you travel a mile towards Bananaville you must pay a tax of 1 apple but you pay nothing when going in the \nother direction (towards Appleland).");
+								.println("Mr.Hitchcock: You have been given the task of transporting 3,000 apples 1,000 miles from Appleland to Bananaville. \nYour truck can carry 1,000 apples at a time. \nEvery time you travel a mile towards Bananaville you must pay a tax of 1 apple but you pay nothing when going in the \nother direction (towards Appleland).\nWhat is the highest number of aples you can get to Bananaville? ");
 						System.out.println("Mr.Hitchcok: If you can't figure out the answer just say nevermind. I won't give you the key but you can come back and try again later.");
 						Command answer = parser.getCommand();
 						String riddleAnswer = saySomething(answer);
