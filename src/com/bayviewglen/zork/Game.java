@@ -363,7 +363,7 @@ class Game {
 				sabaBackpack.setLocation(currentRoom);
 				inventoryItems.removeItem(command.getSecondWord());
 				System.out
-						.println("Saba: Thanks for bringing my backpack! Here's the USB. \nYou look for your backpack in the hallway, which is where you left it, but it's not there! <br>You need your computer to use the USB. <br>Hmm...who would've taken your backpack?");
+						.println("Saba: Thanks for bringing my backpack! Here's the USB. \nYou look for your backpack in the hallway, which is where you left it, but it's not there! \nYou need your computer to use the USB. \nHmm...who would've taken your backpack?");
 				inventoryItems.addToInventory(createItem("USB", masterRoomMap.get("HALLWAY 1"), 2));
 			} else if (!currentRoom.getRoomName().equalsIgnoreCase("HALLWAY 1") && command.getSecondWord().equals("backpack")) {
 				System.out.println("Do you really think you should be throwing Saba under the bus like this? She needs her textbook!");
@@ -467,7 +467,6 @@ class Game {
 			System.out.print("Please pick a file to use: ");
 			Scanner keyboard = new Scanner(System.in);
 			String fileNumber = keyboard.nextLine();
-			keyboard.close();
 			if (!fileNumber.equals("3")) {
 				System.out
 						.println("Oh no! Looks like Saba had some nasty files on her USB and you downloaded them! Wonder what those could have been for... \nAnyway, you took your computer to the tech office which took 10 minutes! \nBetter hurry up and download the right file so you can finish your project!");
