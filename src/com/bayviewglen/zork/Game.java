@@ -352,7 +352,8 @@ class Game {
 			} else if (currentRoom.getRoomName().equalsIgnoreCase("HALLWAY 1") && command.getSecondWord().equals("sabaBackpack")) {
 				sabaBackpack.setLocation(currentRoom);
 				inventoryItems.removeItem(command.getSecondWord());
-				System.out.println("Saba: Thanks for bringing my backpack! Here's the USB.");
+				System.out
+						.println("Saba: Thanks for bringing my backpack! Here's the USB. \nYou look for your backpack in the hallway, which is where you left it, but it's not there! <br>You need your computer to use the USB. <br>Hmm...who would've taken your backpack?");
 				inventoryItems.addToInventory(createItem("USB", masterRoomMap.get("HALLWAY 1"), 2));
 			} else if (!currentRoom.getRoomName().equalsIgnoreCase("HALLWAY 1") && command.getSecondWord().equals(sabaBackpack)) {
 				System.out.println("Do you really think you should be throwing Saba under the bus like this? She needs her textbook!");
@@ -395,33 +396,27 @@ class Game {
 			} else if (word.equalsIgnoreCase("Mr.Hitchcock")) {
 				System.out.println("Mr.Hitchcock: Hello there, you must be looking to get in to the physics classroom. I saw a bag in there this morning and I knew someone would need it.");
 				System.out.println("Mr.Hitchcock: Do you want the key for the physics classroom?");
+				Scanner keyboard = new Scanner(System.in);
 
-				Command choice = parser.getCommand();
-				Boolean lol = processCommand(choice);
-				if (choice.getCommandWord().equalsIgnoreCase("say")) {
-					String decision = saySomething(choice);
+				String decision = keyboard.nextLine();
 
-					if (decision.equalsIgnoreCase("no")) {
-						System.out.println("Mr.Hitchcock: I hope you don't need that backpack.");
-					} else {
-						System.out.println("Mr.Hitchcock: So you want the key? That means it's time for a riddle.");
-						System.out
-								.println("Mr.Hitchcock: You have been given the task of transporting 3,000 apples 1,000 miles from Appleland to Bananaville. \nYour truck can carry 1,000 apples at a time. \nEvery time you travel a mile towards Bananaville you must pay a tax of 1 apple but you pay nothing when going in the \nother direction (towards Appleland).\nWhat is the highest number of aples you can get to Bananaville? ");
-						System.out.println("Mr.Hitchcock: If you can't figure out the answer just say nevermind. I won't give you the key but you can come back and try again later.");
-						Command answer = parser.getCommand();
-						String riddleAnswer = saySomething(answer);
-						while (!riddleAnswer.equalsIgnoreCase("833")) {
-							System.out.println("Mr.Hitchcock: That's not it...");
-							answer = parser.getCommand();
-							riddleAnswer = saySomething(answer);
-							if (riddleAnswer.equalsIgnoreCase("nevermind")) {
-								System.out.println("Mr.Hitchcock: I hope you don't need that backpack.");
-								return;
-							}
+				if (decision.equalsIgnoreCase("no")) {
+					System.out.println("Mr.Hitchcock: I hope you don't need that backpack.");
+				} else if (decision.equalsIgnoreCase("yes")) {
+					System.out.println("Mr.Hitchcock: So you want the key? That means it's time for a riddle.");
+					System.out.println("Mr.Hitchcock: What is right hand rule 0?");
+					System.out.println("Mr.Hitchcock: If you can't figure out the answer just say nevermind. I won't give you the key but you can come back and try again later. \n>");
+					String answer = keyboard.nextLine();
+					while (!answer.equalsIgnoreCase("use your right hand")) {
+						System.out.println("Mr.Hitchcock: That's not it... \n>");
+						answer = keyboard.nextLine();
+						if (answer.equalsIgnoreCase("nevermind")) {
+							System.out.println("Mr.Hitchcock: I hope you don't need that backpack.");
+							return;
 						}
-						System.out.println("Mr.Hitchcock: You finally got the answer! Here's the key to the classroom. Have a great day!");
-						inventoryItems.addToInventory(createItem("key", masterRoomMap.get("SCIENCES_CLASSROOM"), 1));
 					}
+					System.out.println("Mr.Hitchcock: You finally got the answer! Here's the key to the classroom. Have a great day!");
+					inventoryItems.addToInventory(createItem("key", masterRoomMap.get("SCIENCES_CLASSROOM"), 1));
 				} else {
 					System.out.println("Mr.Hitchcock: If you want to say something to me come back and talk to me.");
 				}
