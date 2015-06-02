@@ -159,10 +159,10 @@ class Game {
 	 */
 	private void printWelcome() {
 		System.out.println();
-		System.out.println("Welcome to Escape Mr.Deslauriers!");
+		System.out.println("Welcome to Escape Mr.DesLauriers!");
 		System.out.println("This is an exciting game where you must attempt to hand in an overdue assignment without getting caught be your evil computer science teacher.");
 		System.out.println("Mentor group just ended and you need to get some files from Saba before you can finish your assignment.");
-		System.out.println("Your mentor just told you Mr.Deslauriers is looking for you...if he finds you now you'll get 0 on the assignment.");
+		System.out.println("Your mentor just told you Mr.DesLauriers is looking for you...if he finds you now you'll get 0 on the assignment.");
 		System.out.println("Make sure you hand it in before he finds you!");
 		System.out.println();
 		System.out.println("Type 'help' if you need help.");
@@ -308,12 +308,12 @@ class Game {
 		} else if (nextRoom.getRoomName().equalsIgnoreCase("sciences office")) {
 			if (scienceCounter == 0) {
 				nextRoom = currentRoom;
-				System.out.println("Oh no! It looks like Mr.Deslauriers is in his office. If you go in he might catch you...maybe you should wait a minute.");
+				System.out.println("Oh no! It looks like Mr.DesLauriers is in his office. If you go in he might catch you...maybe you should wait a minute.");
 				Date now = new Date();
 				scienceTime = new Date(now.getTime() + 60 * 1000);
 				scienceCounter++;
 			} else if (!new Date().after(scienceTime)) {
-				System.out.println("Oh no! Mr.Deslauriers Caught you.");
+				System.out.println("Oh no! Mr.DesLauriers Caught you.");
 				System.out.println("The game is now over. Thanks for playing!");
 				System.exit(0);
 			} else {
@@ -375,6 +375,9 @@ class Game {
 				currentRoomName = currentRoom.getRoomName();
 				if (itemRoomName.equalsIgnoreCase(currentRoomName)) {
 					inventoryItems.addToInventory(allItems.getItem(command.getSecondWord()));
+					System.out.println("You have picked up the " + command.getSecondWord() + ".");
+				} else {
+					System.out.println("This item is not in the same room as you!");
 				}
 			}
 		}
@@ -402,7 +405,7 @@ class Game {
 						System.out.println("Mr.Hitchcock: So you want the key? That means it's time for a riddle.");
 						System.out
 								.println("Mr.Hitchcock: You have been given the task of transporting 3,000 apples 1,000 miles from Appleland to Bananaville. \nYour truck can carry 1,000 apples at a time. \nEvery time you travel a mile towards Bananaville you must pay a tax of 1 apple but you pay nothing when going in the \nother direction (towards Appleland).\nWhat is the highest number of aples you can get to Bananaville? ");
-						System.out.println("Mr.Hitchcok: If you can't figure out the answer just say nevermind. I won't give you the key but you can come back and try again later.");
+						System.out.println("Mr.Hitchcock: If you can't figure out the answer just say nevermind. I won't give you the key but you can come back and try again later.");
 						Command answer = parser.getCommand();
 						String riddleAnswer = saySomething(answer);
 						while (!riddleAnswer.equalsIgnoreCase("833")) {
@@ -423,7 +426,7 @@ class Game {
 			} else if (word.equalsIgnoreCase("saba") && !(currentRoom.getRoomName().equalsIgnoreCase("hallway 1"))) {
 				System.out.println("Saba doesn't seem to be in " + currentRoom.getRoomName());
 			} else if (word.equalsIgnoreCase("saba")) {
-				if (!inventoryItems.contains("USB")) {
+				if (!inventoryItems.contains("USB") && !inventoryItems.contains("sabaBackpack")) {
 					System.out
 							.println("Hey, you need that file for your project right? I left my backpack in the physics classroom and it has my USB in it. If you bring me my backpack I can give you the files.");
 				} else {
@@ -431,9 +434,9 @@ class Game {
 				}
 			} else if (word.equalsIgnoreCase("mr.auld") && !(currentRoom.getRoomName().equalsIgnoreCase("mr.auld's office"))) {
 				System.out.println("Mr.Auld doesn't seem to be in " + currentRoom.getRoomName());
-			} else {
+			} else if (word.equalsIgnoreCase("mr.auld")) {
 				System.out
-						.println("Mr.Auld: You muct be here to pick up yor backpack. I am disappointed that you left you bag in the hall, especially because it's a fire hazard. \nDon't do it again!");
+						.println("Mr.Auld: You must be here to pick up yor backpack. I am disappointed that your left you bag in the hall, especially because it's a fire hazard. \nDon't do it again!");
 				inventoryItems.addToInventory(createItem("myBackpack", masterRoomMap.get("MR.AULD'S_OFFICE"), 6));
 			}
 		}
@@ -456,8 +459,8 @@ class Game {
 						.println("Oh no! Looks like Saba had some nasty files on her USB and you downloaded them! Wonder what those could have been for... Anyway, you took your computer to the tech office which took 10 minutes! Better hurry up and download the right file so you can finish your project!");
 				subtractTime();
 			} else {
-
-				return true;
+				System.out.println("Congradulations! You uploaded the files to gitHub before Mr.DesLauriers caught you. Thanks for playing! ");
+				System.exit(0);
 			}
 		} else if (command.hasSecondWord() && command.getSecondWord().equalsIgnoreCase("USB") && !inventoryItems.contains("USB")) {
 			System.out.println("How are you planning to use something that you don't have?");

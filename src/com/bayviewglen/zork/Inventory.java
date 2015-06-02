@@ -17,27 +17,28 @@ public class Inventory {
 		boolean check = checkWeight(item);
 		if (check) {
 			inventory.put(item.getName(), item);
-			weight += item.weight;
-		} else {
+			weight += item.getWeight();
+		} else if (!check) {
 			System.out.println("You only have one back! How do you plan to carry two backpacks?");
 		}
 	}
 
 	private boolean checkWeight(Items item) {
 		boolean canAdd = true;
-		int weightNew = weight + item.weight;
+		int weightNew = weight + item.getWeight();
 		if (weightNew > maxWeight) {
 			canAdd = false;
 		}
 		return canAdd;
 	}
 
-	public void removeItem(String removeItem) {
-		if (!inventory.containsKey(removeItem)) {
+	public void removeItem(String itemName) {
+		if (!inventory.containsKey(itemName)) {
 			System.out.println("Ummmm...you don't have that item...");
 		} else {
-			inventory.remove(removeItem);
-			// subtract weight of item
+			Items item = inventory.get(itemName);
+			weight -= item.getWeight();
+			inventory.remove(itemName);
 		}
 	}
 

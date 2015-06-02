@@ -1,9 +1,9 @@
 package com.bayviewglen.zork;
 
 public class Items {
-	String name;
-	Room location;
-	int weight;
+	private String name;
+	private Room location;
+	private int weight;
 
 	public Items(String itemName, Room startRoom, int itemWeight) {
 		name = itemName;
@@ -21,6 +21,10 @@ public class Items {
 
 	public String getName() {
 		return name;
+	}
+
+	public int getWeight() {
+		return weight;
 	}
 
 }
