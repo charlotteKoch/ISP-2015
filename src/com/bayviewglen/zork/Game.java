@@ -29,6 +29,7 @@ class Game {
 	private Room previousRoom;
 	private Date endTime;
 	private Date pauseTime;
+	private Date scienceTime;
 
 	// This is a MASTER object that contains all of the rooms and is easily
 	// accessible.
@@ -155,6 +156,10 @@ class Game {
 		System.out.println();
 		System.out.println("Welcome to Escape Mr.Deslauriers!");
 		System.out.println("This is an exciting game where you must attempt to hand in an overdue assignment without getting caught be your evil computer science teacher.");
+		System.out.println("Mentor group just ended and you need to get some files from Saba before you can finish your assignment.");
+		System.out.println("Your mentor just told you Mr.Deslauriers is looking for you...if he finds you now you'll get 0 on the assignment.");
+		System.out.println("Make sure you hand it in before he finds you!");
+		System.out.println();
 		System.out.println("Type 'help' if you need help.");
 		System.out.println();
 		describeRoom();
@@ -263,8 +268,6 @@ class Game {
 	 * otherwise print an error message.
 	 */
 	private void goRoom(Command command) {
-		boolean done = false;
-		Date scienceTime = new Date();
 		if (!command.hasSecondWord()) {
 			// if there is no second word, we don't know where to go...
 			System.out.println("Go where?");
@@ -276,59 +279,47 @@ class Game {
 		if (direction.equalsIgnoreCase("back")) {
 			if (previousRoom == null) {
 				System.out.println("Go where?");
-				done = true;
 			} else {
 				currentRoom = previousRoom;
 				describeRoom();
-				done = true;
+				return;
 			}
 		}
 
-		while (!done) {
+		// Try to leave current room.
+		Room nextRoom = currentRoom.nextRoom(direction);
 
-			// Try to leave current room.
-			Room nextRoom = currentRoom.nextRoom(direction);
-
-			if (nextRoom == null) {
-				System.out.println("There is no door!");
-				done = true;
-			} else if (nextRoom.getRoomName().equalsIgnoreCase("physics classroom")) {
-				if (inventoryItems.contains("key")) {
-					previousRoom = currentRoom;
-					currentRoom = nextRoom;
-					System.out.println("You used the key to get into the physics classroom.");
-					describeRoom();
-					done = true;
-				} else {
-					System.out.println("The door is locked! Maybe Mr.Hitchcock has the key...");
-					done = true;
-				}
-			} else if (nextRoom.getRoomName().equalsIgnoreCase("sciences office")) {
-				if (scienceCounter == 0) {
-					nextRoom = currentRoom;
-					System.out.println("Oh no! It looks like Mr.Deslauriers is in his office. If you go in he might catch you...maybe you should wait a minute.");
-					Date now = new Date();
-					scienceTime = new Date(now.getTime() + 60 * 1000);
-					done = true;
-					scienceCounter++;
-				} else if (new Date().after(scienceTime)) {
-					previousRoom = currentRoom;
-					currentRoom = nextRoom;
-					describeRoom();
-					scienceCounter++;
-					done = true;
-
-				} else {
-					System.out.println("Oh no! Mr.Deslauriers Caught you.");
-					done = true;
-				}
+		if (nextRoom == null) {
+			System.out.println("There is no door!");
+		} else if (nextRoom.getRoomName().equalsIgnoreCase("physics classroom")) {
+			if (inventoryItems.contains("key")) {
+				previousRoom = currentRoom;
+				currentRoom = nextRoom;
+				System.out.println("You used the key to get into the physics classroom.");
+				describeRoom();
+			} else {
+				System.out.println("The door is locked! Maybe Mr.Hitchcock has the key...");
+			}
+		} else if (nextRoom.getRoomName().equalsIgnoreCase("sciences office")) {
+			if (scienceCounter == 0) {
+				nextRoom = currentRoom;
+				System.out.println("Oh no! It looks like Mr.Deslauriers is in his office. If you go in he might catch you...maybe you should wait a minute.");
+				Date now = new Date();
+				scienceTime = new Date(now.getTime() + 60 * 1000);
+				scienceCounter++;
+			} else if (!new Date().after(scienceTime)) {
+				System.out.println("Oh no! Mr.Deslauriers Caught you.");
+				finished = true;
 			} else {
 				previousRoom = currentRoom;
 				currentRoom = nextRoom;
 				describeRoom();
-				done = true;
+				scienceCounter++;
 			}
-
+		} else {
+			previousRoom = currentRoom;
+			currentRoom = nextRoom;
+			describeRoom();
 		}
 
 	}
@@ -395,28 +386,32 @@ class Game {
 				System.out.println("Mr.Hitchcock: Do you want the key for the physics classroom?");
 
 				Command choice = parser.getCommand();
-				String decision = saySomething(choice);
+				if (choice.getCommandWord().equalsIgnoreCase("say")) {
+					String decision = saySomething(choice);
 
-				if (decision.equalsIgnoreCase("no")) {
-					System.out.println("Mr.Hitchcock: I hope you don't need that backpack.");
-				} else {
-					System.out.println("Mr.Hitchcock: So you want the key? That means it's time for a riddle.");
-					System.out
-							.println("Mr.Hitchcock: You have been given the task of transporting 3,000 apples 1,000 miles from Appleland to Bananaville. \nYour truck can carry 1,000 apples at a time. \nEvery time you travel a mile towards Bananaville you must pay a tax of 1 apple but you pay nothing when going in the \nother direction (towards Appleland).");
-					System.out.println("Mr.Hitchcok: If you can't figure out the answer just say nevermind. I won't give you the key but you can come back and try again later.");
-					Command answer = parser.getCommand();
-					String riddleAnswer = saySomething(answer);
-					while (!riddleAnswer.equalsIgnoreCase("833")) {
-						System.out.println("Mr.Hitchcock: That's not it...");
-						answer = parser.getCommand();
-						riddleAnswer = saySomething(answer);
-						if (riddleAnswer.equalsIgnoreCase("nevermind")) {
-							System.out.println("Mr.Hitchcock: I hope you don't need that backpack.");
-							return;
+					if (decision.equalsIgnoreCase("no")) {
+						System.out.println("Mr.Hitchcock: I hope you don't need that backpack.");
+					} else {
+						System.out.println("Mr.Hitchcock: So you want the key? That means it's time for a riddle.");
+						System.out
+								.println("Mr.Hitchcock: You have been given the task of transporting 3,000 apples 1,000 miles from Appleland to Bananaville. \nYour truck can carry 1,000 apples at a time. \nEvery time you travel a mile towards Bananaville you must pay a tax of 1 apple but you pay nothing when going in the \nother direction (towards Appleland).");
+						System.out.println("Mr.Hitchcok: If you can't figure out the answer just say nevermind. I won't give you the key but you can come back and try again later.");
+						Command answer = parser.getCommand();
+						String riddleAnswer = saySomething(answer);
+						while (!riddleAnswer.equalsIgnoreCase("833")) {
+							System.out.println("Mr.Hitchcock: That's not it...");
+							answer = parser.getCommand();
+							riddleAnswer = saySomething(answer);
+							if (riddleAnswer.equalsIgnoreCase("nevermind")) {
+								System.out.println("Mr.Hitchcock: I hope you don't need that backpack.");
+								return;
+							}
 						}
+						System.out.println("Mr.Hitchcock: You finally got the answer! Here's the key to the classroom. Have a great day!");
+						inventoryItems.addToInventory(createItem("key", masterRoomMap.get("SCIENCES_CLASSROOM"), 1));
 					}
-					System.out.println("Mr.Hitchcock: You finally got the answer! Here's the key to the classroom. Have a great day!");
-					inventoryItems.addToInventory(createItem("key", masterRoomMap.get("SCIENCES_CLASSROOM"), 1));
+				} else {
+					System.out.println("Mr.Hitchcock: If you want to say something to me come back and talk to me.");
 				}
 			} else if (word.equalsIgnoreCase("saba") && !(currentRoom.getRoomName().equalsIgnoreCase("hallway 1"))) {
 				System.out.println("Saba doesn't seem to be in " + currentRoom.getRoomName());
