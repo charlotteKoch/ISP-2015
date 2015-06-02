@@ -161,11 +161,17 @@ class Game {
 	private void printWelcome() {
 		System.out.println();
 		System.out.println("Welcome to Escape Mr.DesLauriers!");
-		System.out.println("This is an exciting game where you must attempt to hand in an overdue assignment without getting caught be your evil computer science teacher.");
+		System.out.println("This is an exciting game where you must attempt to hand in an overdue assignment without being caught by your evil computer science teacher.");
 		System.out.println("Mentor group just ended and you need to get some files from Saba before you can finish your assignment.");
 		System.out.println("Your mentor just told you Mr.DesLauriers is looking for you...if he finds you now you'll get 0 on the assignment.");
 		System.out.println("Make sure you hand it in before he finds you!");
 		System.out.println();
+		System.out.println("Your command words are: ");
+		parser.showCommands();
+		System.out.println();
+		System.out.println("The existing items are: sabaBackpack, myBackpack, USB, key\n");
+		System.out.println("Here is a map of the school:");
+		printMap();
 		System.out.println("Type 'help' if you need help.");
 		System.out.println();
 		describeRoom();
@@ -234,26 +240,30 @@ class Game {
 		if (!command.hasSecondWord()) {
 			System.out.println("Show what?");
 		} else if (command.getSecondWord().equalsIgnoreCase("map")) {
-			System.out.println(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ");
-			System.out.printf("|%21s|%21s|%21s|\n", " ", " ", " ");
-			System.out.printf("|%21s|%21s|%21s|\n", " ", " ", " ");
-			System.out.printf("|%21s|%21s|%21s|\n", "Mentor Classroom  ", "Physics Classroom  ", "Sciences Office   ");
-			System.out.printf("|%21s|%21s|%21s|\n", " ", " ", " ");
-			System.out.printf("|%21s|%21s|%21s|\n", " ", " ", " ");
-			System.out.println(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ");
-			System.out.printf("|%21s|%21s|%21s|\n", " ", " ", " ");
-			System.out.printf("|%21s|%21s|%21s|\n", "Hallway 1      ", "Hallway 2      ", "Hallway 3      ");
-			System.out.printf("|%21s|%21s|%21s|\n", " ", " ", " ");
-			System.out.println(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ");
-			System.out.printf("%22s|%21s|%21s|\n", " N           ", " ", " ");
-			System.out.printf("%22s|%21s|%21s|\n", " |           ", " ", " ");
-			System.out.printf("%22s|%21s|%21s|\n", "W -- -- E       ", "Mr. Auld's Office  ", "Tech Office     ");
-			System.out.printf("%22s|%21s|%21s|\n", " |           ", " ", " ");
-			System.out.printf("%22s|%21s|%21s|\n", " S           ", " ", " ");
-			System.out.println("                       - - - - - - - - - - - - - - - - - - - - - - ");
+			printMap();
 		} else {
 			describeRoom();
 		}
+	}
+
+	public void printMap() {
+		System.out.println(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ");
+		System.out.printf("|%21s|%21s|%21s|\n", " ", " ", " ");
+		System.out.printf("|%21s|%21s|%21s|\n", " ", " ", " ");
+		System.out.printf("|%21s|%21s|%21s|\n", "Mentor Classroom  ", "Physics Classroom  ", "Sciences Office   ");
+		System.out.printf("|%21s|%21s|%21s|\n", " ", " ", " ");
+		System.out.printf("|%21s|%21s|%21s|\n", " ", " ", " ");
+		System.out.println(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ");
+		System.out.printf("|%21s|%21s|%21s|\n", " ", " ", " ");
+		System.out.printf("|%21s|%21s|%21s|\n", "Hallway 1      ", "Hallway 2      ", "Hallway 3      ");
+		System.out.printf("|%21s|%21s|%21s|\n", " ", " ", " ");
+		System.out.println(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ");
+		System.out.printf("%22s|%21s|%21s|\n", " N           ", " ", " ");
+		System.out.printf("%22s|%21s|%21s|\n", " |           ", " ", " ");
+		System.out.printf("%22s|%21s|%21s|\n", "W -- -- E       ", "Mr. Auld's Office  ", "Tech Office     ");
+		System.out.printf("%22s|%21s|%21s|\n", " |           ", " ", " ");
+		System.out.printf("%22s|%21s|%21s|\n", " S           ", " ", " ");
+		System.out.println("                       - - - - - - - - - - - - - - - - - - - - - - ");
 	}
 
 	// implementations of user commands:
