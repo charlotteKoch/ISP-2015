@@ -433,7 +433,7 @@ class Game {
 			} else if (word.equalsIgnoreCase("saba") && !(currentRoom.getRoomName().equalsIgnoreCase("hallway 1"))) {
 				System.out.println("Saba doesn't seem to be in " + currentRoom.getRoomName());
 			} else if (word.equalsIgnoreCase("saba")) {
-				if (!inventoryItems.contains("USB") && !inventoryItems.contains("")) {
+				if (!inventoryItems.contains("USB") && !inventoryItems.contains("backpack")) {
 					System.out
 							.println("Hey, you need that file for your project right? I left my backpack in the physics classroom and it has my USB in it. If you bring me my backpack I can give you the files.");
 				} else {
