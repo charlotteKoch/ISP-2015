@@ -451,7 +451,7 @@ class Game {
 				} else if (!givenSabaBackpack) {
 					System.out.println("Saba: Can you put down my backpack please?");
 				} else {
-					System.out.println("Saba: Good luck with your project!");
+					System.out.println("Saba: You should use the USB to finish your project. Good luck!");
 				}
 			} else if (word.equalsIgnoreCase("mr.auld") && !(currentRoom.getRoomName().equalsIgnoreCase("mr.auld's office"))) {
 				System.out.println("Mr.Auld doesn't seem to be in " + currentRoom.getRoomName());
