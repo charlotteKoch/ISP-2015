@@ -40,10 +40,13 @@ class Game {
 	// Great Room (assuming you have one).
 	private HashMap<String, Character> listOfCharacters = new HashMap<String, Character>();
 	private Inventory inventoryItems = new Inventory();
-	private Items key, myBackpack, sabaBackpack, USB;
+	private Items myBackpack, sabaBackpack;
 	private Inventory allItems = new Inventory();
 	private int scienceCounter = 0;
 	private boolean finished = false;
+	private boolean givenSabaBackpack = false;
+	private boolean gottenMyBackpack = false;
+	private boolean solvedRiddle = false;
 
 	private HashMap<String, Room> masterRoomMap;
 
@@ -210,8 +213,6 @@ class Game {
 			dropItem(command);
 		} else if (commandWord.equals("show")) {
 			map(command);
-		} else if (commandWord.equals("say")) {
-			saySomething(command);
 		} else if (commandWord.equals("quit")) {
 			if (command.hasSecondWord())
 				System.out.println("Quit what?");
@@ -225,15 +226,6 @@ class Game {
 		}
 
 		return false;
-	}
-
-	private String saySomething(Command command) {
-		if (!command.hasSecondWord()) {
-			return null;
-		} else {
-			String word = command.getSecondWord();
-			return word;
-		}
 	}
 
 	private void map(Command command) {
@@ -275,7 +267,7 @@ class Game {
 	private void printHelp() {
 		System.out.println("You are trying to finish your computer science project before Mr.DesLauriers catches you. Be fast, you don't have much time!");
 		System.out.println();
-		System.out.println("Your command words are:");
+		System.out.println("Your command words are: " + "yes" + "nevermind");
 		parser.showCommands();
 		System.out.println("The existing items are: backpack, myBackpack, USB, key");
 	}
@@ -317,6 +309,15 @@ class Game {
 			} else {
 				System.out.println("The door is locked! Maybe Mr.Hitchcock has the key...");
 			}
+		} else if (nextRoom.getRoomName().equalsIgnoreCase("mr.auld's office")) {
+			if (givenSabaBackpack) {
+				previousRoom = currentRoom;
+				currentRoom = nextRoom;
+				describeRoom();
+			} else {
+				System.out.println("Mr.Auld looks busy right now. Maybe you should get Saba her backpack first.");
+			}
+
 		} else if (nextRoom.getRoomName().equalsIgnoreCase("sciences office")) {
 			if (scienceCounter == 0) {
 				nextRoom = currentRoom;
@@ -325,7 +326,7 @@ class Game {
 				scienceTime = new Date(now.getTime() + 20 * 1000);
 				scienceCounter++;
 			} else if (!new Date().after(scienceTime)) {
-				System.out.println("Oh no! Mr.DesLauriers Caught you.");
+				System.out.println("Oh no! Mr.DesLauriers caught you.");
 				System.out.println("The game is now over. Thanks for playing!");
 				System.exit(0);
 			} else {
@@ -359,16 +360,24 @@ class Game {
 		} else {
 			if (!inventoryItems.contains(command.getSecondWord())) {
 				System.out.println("You can't drop something you don't have!");
-			} else if (currentRoom.getRoomName().equalsIgnoreCase("HALLWAY 1") && command.getSecondWord().equals("backpack")) {
+			} else if (currentRoom.getRoomName().equalsIgnoreCase("HALLWAY 1") && command.getSecondWord().equalsIgnoreCase("backpack")) {
 				sabaBackpack.setLocation(currentRoom);
 				inventoryItems.removeItem(command.getSecondWord());
+				allItems.removeItem(command.getSecondWord());
+				System.out.println("Saba: Thanks for bringing my backpack! Here's the USB.");
+				System.out.println("");
 				System.out
-						.println("Saba: Thanks for bringing my backpack! Here's the USB. \nYou look for your backpack in the hallway, which is where you left it, but it's not there! \nYou need your computer to use the USB. \nHmm...who would've taken your backpack?");
+						.println("You look for your backpack in the hallway, which is where you left it, but it's not there! \nYou need your computer to use the USB. Hmm...who would've taken your backpack?");
 				inventoryItems.addToInventory(createItem("USB", masterRoomMap.get("HALLWAY 1"), 2));
+				givenSabaBackpack = true;
 			} else if (!currentRoom.getRoomName().equalsIgnoreCase("HALLWAY 1") && command.getSecondWord().equals("backpack")) {
 				System.out.println("Do you really think you should be throwing Saba under the bus like this? She needs her textbook!");
+			} else if (command.getSecondWord().equalsIgnoreCase("key")) {
+				System.out.println("You really shouldn't be dropping that key!");
 			} else {
 				inventoryItems.removeItem(command.getSecondWord());
+				System.out.println("You have dropped the " + command.getSecondWord() + ".");
+				allItems.getItem(command.getSecondWord()).setLocation(currentRoom);
 			}
 		}
 	}
@@ -403,7 +412,7 @@ class Game {
 			String word = command.getSecondWord();
 			if (word.equalsIgnoreCase("Mr.Hitchcock") && !(currentRoom.getRoomName().equalsIgnoreCase("sciences office"))) {
 				System.out.println("Mr.Hitchcock doesn't seem to be in " + currentRoom.getRoomName());
-			} else if (word.equalsIgnoreCase("Mr.Hitchcock")) {
+			} else if (word.equalsIgnoreCase("Mr.Hitchcock") && !solvedRiddle) {
 				System.out.println("Mr.Hitchcock: Hello there, you must be looking to get in to the physics classroom. I saw a bag in there this morning and I knew someone would need it.");
 				System.out.println("Mr.Hitchcock: Do you want the key for the physics classroom?");
 				Scanner keyboard = new Scanner(System.in);
@@ -427,29 +436,33 @@ class Game {
 					}
 					System.out.println("Mr.Hitchcock: You finally got the answer! Here's the key to the classroom. Have a great day!");
 					inventoryItems.addToInventory(createItem("key", masterRoomMap.get("SCIENCES_CLASSROOM"), 1));
+					solvedRiddle = true;
 				} else {
 					System.out.println("Mr.Hitchcock: If you want to say something to me come back and talk to me.");
 				}
+			} else if (word.equalsIgnoreCase("Mr.Hitchcock")) {
+				System.out.println("Don't you have a project to finish or something?");
 			} else if (word.equalsIgnoreCase("saba") && !(currentRoom.getRoomName().equalsIgnoreCase("hallway 1"))) {
 				System.out.println("Saba doesn't seem to be in " + currentRoom.getRoomName());
 			} else if (word.equalsIgnoreCase("saba")) {
-				if (!inventoryItems.contains("USB") && !inventoryItems.contains("backpack")) {
+				if (!givenSabaBackpack && !inventoryItems.contains("backpack")) {
 					System.out
-							.println("Hey, you need that file for your project right? I left my backpack in the physics classroom and it has my USB in it. If you bring me my backpack I can give you the files.");
+							.println("Saba: Hey, you need that file for your project right? I left my backpack in the physics classroom and it has my USB in it. If you bring me my backpack I can give you the files.");
+				} else if (!givenSabaBackpack) {
+					System.out.println("Saba: Can you put down my backpack please?");
 				} else {
-					System.out.println("Can you put down my backpack please?");
+					System.out.println("Saba: Good luck with your project!");
 				}
 			} else if (word.equalsIgnoreCase("mr.auld") && !(currentRoom.getRoomName().equalsIgnoreCase("mr.auld's office"))) {
 				System.out.println("Mr.Auld doesn't seem to be in " + currentRoom.getRoomName());
 			} else if (word.equalsIgnoreCase("mr.auld")) {
-				boolean add = inventoryItems.addToInventory(myBackpack);
-				if (!add) {
-					System.out
-							.println("Mr.Auld: You must be here to pick up yor backpack. I am disappointed that you left your bag in the hall, especially because it's a fire hazard. \nI can see you have a backpack with you already, how do you plan to carry two backpacks with only one back?");
-				} else {
+				if (!gottenMyBackpack) {
 					System.out
 							.println("Mr.Auld: You must be here to pick up yor backpack. I am disappointed that you left your bag in the hall, especially because it's a fire hazard. \nHere's your backpack but please don't do it again!");
-
+					inventoryItems.addToInventory(myBackpack);
+					gottenMyBackpack = true;
+				} else {
+					System.out.println("You again? What do you want? I am a very busy man!");
 				}
 			}
 		}
@@ -459,7 +472,7 @@ class Game {
 		if (!command.hasSecondWord()) {
 			System.out.println("What are you trying to use?");
 		} else if (command.getSecondWord().equalsIgnoreCase("USB") && !inventoryItems.contains("myBackpack")) {
-			System.out.println("How can you use the USB without your computer. You need your backpack to get your computer.");
+			System.out.println("How can you use the USB without your computer? You need your backpack to get your computer.");
 		} else if (command.hasSecondWord() && command.getSecondWord().equalsIgnoreCase("USB") && inventoryItems.contains("USB")) {
 			System.out.println("file 2");
 			System.out.println("file 3");
@@ -467,7 +480,7 @@ class Game {
 			System.out.print("Please pick a file to use: ");
 			Scanner keyboard = new Scanner(System.in);
 			String fileNumber = keyboard.nextLine();
-			if (!fileNumber.equals("3")) {
+			if (!fileNumber.equals("3") && !fileNumber.equals("file 3")) {
 				System.out
 						.println("Oh no! Looks like Saba had some nasty files on her USB and you downloaded them! Wonder what those could have been for... \nAnyway, you took your computer to the tech office which took 10 minutes! \nBetter hurry up and download the right file so you can finish your project!");
 				subtractTime();
