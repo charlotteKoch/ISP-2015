@@ -277,7 +277,7 @@ class Game {
 		System.out.println();
 		System.out.println("Your command words are:");
 		parser.showCommands();
-		System.out.println("The existing items are: , myBackpack, USB, key");
+		System.out.println("The existing items are: backpack, myBackpack, USB, key");
 	}
 
 	/**
