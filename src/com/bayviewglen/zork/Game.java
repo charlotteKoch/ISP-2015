@@ -267,7 +267,7 @@ class Game {
 	private void printHelp() {
 		System.out.println("You are trying to finish your computer science project before Mr.DesLauriers catches you. Be fast, you don't have much time!");
 		System.out.println();
-		System.out.println("Your command words are: " + "yes" + "nevermind");
+		System.out.print("Your command words are: " + "yes  " + "nevermind  ");
 		parser.showCommands();
 		System.out.println("The existing items are: backpack, myBackpack, USB, key");
 	}
