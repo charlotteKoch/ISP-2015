@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
-class Room {
+class Room implements java.io.Serializable {
 	private String roomName;
 	private String description;
 	private HashMap<String, Room> exits; // stores exits of this room.

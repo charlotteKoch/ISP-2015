@@ -23,7 +23,7 @@ import java.util.Scanner;
  * the parser returns.
  */
 
-class Game {
+class Game implements java.io.Serializable {
 	private Parser parser;
 	private Room currentRoom;
 	private Room previousRoom;
@@ -148,7 +148,12 @@ class Game {
 				finished = true;
 			}
 		}
+		saveGame();
 		System.out.println("Thank you for playing.  Good bye.");
+	}
+
+	private void saveGame() {
+		// TODO Auto-generated method stub
 
 	}
 
@@ -165,6 +170,7 @@ class Game {
 		System.out.println();
 		System.out.println("Welcome to Escape Mr.DesLauriers!");
 		System.out.println("This is an exciting game where you must attempt to hand in an overdue assignment without being caught by your evil computer science teacher.");
+		System.out.println("Your game will be saved automatically.");
 		System.out.println("Mentor group just ended and you need to get some files from Saba before you can finish your assignment.");
 		System.out.println("Your mentor just told you Mr.DesLauriers is looking for you...if he finds you now you'll get 0 on the assignment.");
 		System.out.println("Make sure you hand it in before he finds you!");

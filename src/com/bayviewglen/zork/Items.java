@@ -1,6 +1,6 @@
 package com.bayviewglen.zork;
 
-public class Items {
+public class Items implements java.io.Serializable {
 	private String name;
 	private Room location;
 	private int weight;
