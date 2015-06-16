@@ -1,7 +1,11 @@
 package com.bayviewglen.zork;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -129,10 +133,26 @@ class Game implements java.io.Serializable {
 	 * Main play routine. Loops until end of play.
 	 */
 	public void play() {
-		printWelcome();
 
-		Date now = new Date();
-		endTime = new Date(now.getTime() + 6000 * 1000L);
+		File saveFile = new File("data/saveFile.dat");
+
+		if (saveFile.length() != 0) {
+			try {
+				FileInputStream f_in = new FileInputStream("data/saveFile.dat");
+				ObjectInputStream ois = new ObjectInputStream(f_in);
+				Object[] objectArray = (Object[]) ois.readObject();
+				currentRoom = (Room) objectArray[0];
+				inventoryItems = (Inventory) objectArray[1];
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		} else {
+
+			printWelcome();
+
+			Date now = new Date();
+			endTime = new Date(now.getTime() + 6000 * 1000L);
+		}
 
 		// Enter the main command loop. Here we repeatedly read commands and
 		// execute them until the game is over.
@@ -220,10 +240,21 @@ class Game implements java.io.Serializable {
 		} else if (commandWord.equals("show")) {
 			map(command);
 		} else if (commandWord.equals("quit")) {
-			if (command.hasSecondWord())
+			if (command.hasSecondWord()) {
 				System.out.println("Quit what?");
-			else
+			} else {
+				try {
+					FileOutputStream f_out = new FileOutputStream("data/saveFile.dat");
+					ObjectOutputStream gamestate = new ObjectOutputStream(f_out);
+					Object[] laziness = { currentRoom, inventoryItems };
+					gamestate.writeObject(laziness);
+					gamestate.close();
+					System.out.println("Game Saved.");
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
 				return true;
+			}
 			; // signal that we want to quit
 		} else if (commandWord.equals("eat")) {
 			System.out.println("Do you really think you should be eating at a time like this?");
